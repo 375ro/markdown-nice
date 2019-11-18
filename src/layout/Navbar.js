@@ -6,6 +6,7 @@ import classnames from "classnames";
 import ThemeSelect from "../component/NavbarRight/ThemeSelect";
 import Format from "../component/NavbarRight/Format";
 import Copy from "../component/NavbarRight/Copy";
+import ScrollSync from "../component/NavbarRight/ScrollSync";
 import Reset from "../component/NavbarLeft/Reset";
 import Image from "../component/NavbarLeft/Image";
 import Link from "../component/NavbarLeft/Link";
@@ -60,6 +61,7 @@ class Navbar extends Component {
           </div>
         </div>
         <div className="nice-right-nav">
+          <ScrollSync />
           <Copy />
           <ThemeSelect />
           <Format />

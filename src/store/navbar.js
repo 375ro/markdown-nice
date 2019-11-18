@@ -20,6 +20,8 @@ class Navbar {
 
   @observable isImmersiveEditing = false;
 
+  @observable scrollSync = true;
+
   @observable templateNum;
 
   @observable codeNum;
@@ -67,6 +69,11 @@ class Navbar {
   setPreviewType = (previewType) => {
     this.previewType = previewType;
     window.localStorage.setItem(PREVIEW_TYPE, previewType);
+  };
+
+  @action
+  setScrollSync = (val) => {
+    this.scrollSync = val;
   };
 }
 
