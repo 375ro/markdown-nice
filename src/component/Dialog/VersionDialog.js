@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import {observer, inject} from "mobx-react";
-import {Modal, Timeline, Button, message} from "antd";
+import {Modal, Timeline, Button} from "antd";
 import axios from "axios";
-import {VERSION_NUM} from "../../utils/constant";
+import {packageVersion} from "../../utils/helper";
+import {NEWEST_VERSION} from "../../utils/constant";
 import SvgIcon from "../../icon";
 
 @inject("dialog")
@@ -11,6 +12,7 @@ class VersionDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // eslint-disable-next-line react/no-unused-state
       versionNum: 0,
       versionTimeline: [],
       recommend: null,
@@ -36,24 +38,22 @@ class VersionDialog extends Component {
     w.location.href = "https://docs.mdnice.com";
   };
 
-  componentDidMount = () => {
-    axios
-      .get("https://api.mdnice.com/versions/newest")
-      .then(({data: response}) => {
-        this.setState(
-          {
-            ...response,
-          },
-          () => {
-            if (this.state.versionNum !== VERSION_NUM) {
-              this.props.dialog.setVersionOpen(true);
-            }
-          },
-        );
-      })
-      .catch((err) => {
-        message.error("读取版本信息错误。");
-      });
+  componentDidMount = async () => {
+    try {
+      const {data} = await axios.get("https://api.mdnice.com/versions/newest");
+      const newestVersion = localStorage.getItem(NEWEST_VERSION);
+      if (newestVersion !== data.version) {
+        localStorage.setItem(NEWEST_VERSION, data.version);
+        if (data.version !== packageVersion) {
+          this.props.dialog.setVersionOpen(true);
+        }
+      } else if (newestVersion !== packageVersion) {
+        this.props.dialog.setVersionOpen(true);
+      }
+      this.setState({...data});
+    } catch (err) {
+      console.error("读取最新Mdnice版本信息错误");
+    }
   };
 
   render() {
